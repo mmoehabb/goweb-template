@@ -23,3 +23,7 @@ go.work.sum
 
 # env file
 .env
+
+# templ / air
+tmp
+*_templ.go

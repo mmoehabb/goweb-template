@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Nerko+One&display=swap');
+
+/** 
+ * Info: realtimecolors.com came in handy in generating these.
+**/
+
+* {
+  transition: 250ms;  
+}
+
+/** colors **/
+html {
+  --light-display: flex;
+  --light-opacity: 1;
+
+  --dark-display: none;
+  --dark-opacity: 0;
+
+  --color-primary: #6e7d92;
+  --color-secondary: #b2bbc9;
+  --color-accent: #8a9ab2;
+  --color-background: #f8f8f9;
+  --color-text: #070708;
+}
+
+html[theme="dark"] {
+  --light-display: none;
+  --light-opacity: 0;
+
+  --dark-display: flex;
+  --dark-opacity: 1;
+  
+  --color-primary: #6e7d91;
+  --color-secondary: #36404e;
+  --color-accent: #4d5d75;
+  --color-background: #070708;
+  --color-text: #f7f7f8;
+}
+
+.bg-primary { background-color: var(--color-primary) }
+.bg-secondary { background-color: var(--color-secondary) }
+.bg-accent { background-color: var(--color-accent) }
+.bg-background { background-color: var(--color-background) }
+.bg-text { background-color: var(--color-text) }
+
+.color-primary { color: var(--color-primary) }
+.color-secondary { color: var(--color-secondary) }
+.color-accent { color: var(--color-accent) }
+.color-background { color: var(--color-background) }
+.color-text{ color: var(--color-text) }
+
+.light-view { display: var(--light-display); }
+.dark-view { display: var(--dark-display); }
+
+/** typography **/
+body {
+  font-family: "Nerko One", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Inter';
+  font-weight: 700;
+}
+
+html {font-size: 100%;} /* 16px */
+h1 {font-size: 4.210rem; /* 67.36px */}
+h2 {font-size: 3.158rem; /* 50.56px */}
+h3 {font-size: 2.369rem; /* 37.92px */}
+h4 {font-size: 1.777rem; /* 28.48px */}
+h5 {font-size: 1.333rem; /* 21.28px */}
+small {font-size: 0.750rem; /* 12px */}
+
+/** animations **/
+
+@keyframes example {
+  0% { bottom: -200px; right: 50px; }
+  5% { bottom: -50px; right: 50px; }
+  8% { bottom: -50px; right: 50px; }
+  10% { bottom: -200px; right: 50px; }
+  11% { bottom: -200px; right: 80%; }
+  
+  20% { bottom: -50px; right: 80%; }
+  23% { bottom: -50px; right: 80%; } 
+  25% { bottom: -200px; right: 80%; } 
+  26% { bottom: -200px; right: 50%; }
+  
+  37% { bottom: -100px; right: 50%; }
+  40% { bottom: -100px; right: 50%; }
+  42% { bottom: -200px; right: 50%; }
+  48% { bottom: -200px; right: 100% }
+  
+  60% { bottom: -20px; right: 100% }
+  61% { bottom: -20px; right: calc(100% - 75px); }
+  65% { bottom: -20px; right: calc(100% - 75px); }
+  70% { bottom: -20px; right: 100%; }
+
+  100% { bottom: -20px; right: 100%; }
+}
+
