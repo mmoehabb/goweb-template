@@ -34,3 +34,12 @@ You can also enable live reload with the command:
 ```
 $ templ generate --watch --cmd "go run ."
 ```
+
+### ./cmd (Only Linux)
+
+You may use the `./cmd` file placed in the root directory, as a shorthand for the above-mentioned commands:
+
+```shell
+$ chmod +x ./cmd
+$ ./cmd dev # executes: "templ generate --watch --cmd 'go run .'"
+```
