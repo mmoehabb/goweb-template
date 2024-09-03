@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nerko+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=K2D:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Matemasie&family=Playwrite+BE+VLG:wght@100..400&display=swap');
 
 /** 
  * Info: realtimecolors.com came in handy in generating these.
@@ -20,7 +20,9 @@ html {
   --color-secondary: #b2bbc9;
   --color-accent: #8a9ab2;
   --color-background: #f8f8f9;
-  --color-text: #070708;
+  --color-text: #272728;
+  --color-success: #2ed573;
+  --color-error: #ff4757;
 }
 
 html[theme="dark"] {
@@ -35,6 +37,8 @@ html[theme="dark"] {
   --color-accent: #4d5d75;
   --color-background: #070708;
   --color-text: #f7f7f8;
+  --color-success: #05c46b;
+  --color-error: #b33939;
 }
 
 .bg-primary { background-color: var(--color-primary) }
@@ -42,26 +46,33 @@ html[theme="dark"] {
 .bg-accent { background-color: var(--color-accent) }
 .bg-background { background-color: var(--color-background) }
 .bg-text { background-color: var(--color-text) }
+.bg-success { background-color: var(--color-success) }
+.bg-error { background-color: var(--color-error) }
 
 .color-primary { color: var(--color-primary) }
 .color-secondary { color: var(--color-secondary) }
 .color-accent { color: var(--color-accent) }
 .color-background { color: var(--color-background) }
-.color-text{ color: var(--color-text) }
+.color-text { color: var(--color-text) }
+.color-success { color: var(--color-success) }
+.color-error { color: var(--color-error) }
+
+.border-primary { color: var(--color-primary) }
+.border-secondary { color: var(--color-secondary) }
+.border-accent { color: var(--color-accent) }
+.border-background { color: var(--color-background) }
+.border-text { color: var(--color-text) }
+.border-success { color: var(--color-success) }
+.border-error { color: var(--color-error) }
 
 .light-view { display: var(--light-display); }
 .dark-view { display: var(--dark-display); }
 
 /** typography **/
 body {
-  font-family: "Nerko One", cursive;
+  font-family: "K2D", sans-serif;
   font-weight: 400;
   font-style: normal;
-}
-
-h1, h2, h3, h4, h5 {
-  font-family: 'Inter';
-  font-weight: 700;
 }
 
 html {font-size: 100%;} /* 16px */
