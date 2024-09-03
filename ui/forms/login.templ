@@ -1,0 +1,13 @@
+package forms
+
+import "goweb/ui/components"
+
+templ Login(errs map[string]string) {
+  <div hx-ext='response-targets'>
+    <form class="p-6 drop-shadow" hx-post="/login" hx-swap="outerHTML" hx-target-4xx="this">
+      @components.TextInput("username", "text", "", errs["username"], templ.Attributes{})
+      @components.TextInput("password", "password", "",  errs["password"], templ.Attributes{})
+      @components.Button("Login", "normal", templ.Attributes{ "type": "submit" })
+    </form>
+  </div>
+}

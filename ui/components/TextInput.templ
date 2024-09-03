@@ -1,0 +1,19 @@
+package components
+
+templ TextInput(label string, itype string, desc string, err string, attrs templ.Attributes) {
+  <div class="my-2">
+    <div>
+      <input
+        type={ itype }
+        name={ label }
+        placeholder={ label }
+        class="block w-full rounded-md py-1.5 px-2 ring-1 ring-inset color-text bg-background"
+        { attrs... }
+      />
+    </div>
+    if desc != "" { 
+      <label class="p-1 block color-text text-md">{ desc }</label> 
+    }
+    <label class="p-1 block color-error text-md">{ err }</label>
+  </div>
+}

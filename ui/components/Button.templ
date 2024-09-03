@@ -1,0 +1,7 @@
+package components
+
+templ Button(label string, variant string, attrs templ.Attributes) {
+  <button class="w-full py-2 px-8 text-lg color-background bg-primary hover:translate-y-[-2px] rounded" variant={ variant } { attrs... }>
+    { label }
+  </button>
+}
