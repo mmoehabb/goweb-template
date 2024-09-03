@@ -1,6 +1,7 @@
 package pages
 
 import "goweb/ui/layouts"
+import "goweb/ui/forms"
 
 var headHandle = templ.NewOnceHandle()
 
@@ -17,8 +18,9 @@ templ Index() {
 
       <link href="public/globals.css" rel="stylesheet" />
       <script src="public/tailwind.js"></script>
-      <script src="https://unpkg.com/htmx.org@2.0.2"></script>
       <script src="public/util.js"></script>
+      <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+      <script src='https://unpkg.com/htmx.org/dist/ext/response-targets.js'></script>
     }
     <body class="relative flex flex-col bg-background color-text min-h-screen overflow-hidden">
       
@@ -26,22 +28,22 @@ templ Index() {
 
       <main class="flex-1 flex flex-wrap justify-center items-center p-8 lg:px-24 bg-background color-text">
         <div id="gamediv" class="flex-1 text-2xl p-4 text-center">
-          <label>A game should appear here once you successfully submit the form.</label>
+          <label>A game should appear here once you successfully login.</label>
         </div>
-        <div class="flex flex-col p-4 shadow bg-secondary rounded-xl">
-          <label class="text-xl">Let's try creating a functional form 😃</label>
+        <div class="flex flex-col p-4 shadow-xl bg-background border-2 border-primary rounded-xl">
+          <label class="text-xl color-text">Let's try creating a functional form 😃</label>
+          @forms.Login(make(map[string]string))
+          @forms.Register(make(map[string]string))
         </div>
       </main>
       
       @layouts.Footer()
 
-      <div>
-        <img 
-          src="public/PNGs/go.png" 
-          class="absolute h-52 bottom-[-200px]" 
-          style="animation: example 30s linear 5s infinite forwards"
-        />
-      </div>
+      <img 
+        src="public/PNGs/go.png" 
+        class="absolute h-52 bottom-[-200px]" 
+        style="animation: example 30s linear 5s infinite forwards"
+      />
 
     </body>
   </html>
