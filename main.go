@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
   "goweb/pages"
+  "goweb/handlers/user"
 )
 
 func main() {
@@ -20,9 +21,8 @@ func main() {
     return c.SendStatus(200)
   })
 
-  app.Post("/clicked", func(c *fiber.Ctx) error {
-    return c.SendString("Clicked!")
-  })
+  app.Post("/login", user.Login)
+  app.Post("/register", user.Register)
 
   app.Listen(":3000")
 }
