@@ -7,6 +7,7 @@ A template for developing full-stack web applications in Golang.
 - [Tailwind](https://tailwindcss.com/)
 - [HTMX](https://htmx.org/)
 - [Fiber](https://docs.gofiber.io/)
+- [Postgres](https://github.com/jackc/pgx)
 
 ## Usage
 
