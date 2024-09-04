@@ -2,8 +2,6 @@ package user
 
 import (
 	"context"
-  "fmt"
-  "os"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -27,8 +25,9 @@ func Register(c *fiber.Ctx) error {
 
   err := user.Add(creds.Username, creds.Password)
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Query Failed: %v", err)
-    return err
+    errs["username"] = "already found, try another one."
+    forms.Register(errs).Render(context.Background(), c.Response().BodyWriter())
+    return c.SendStatus(fiber.StatusFound)
   }
 
   forms.Register(errs).Render(context.Background(), c.Response().BodyWriter())

@@ -1,11 +1,13 @@
 package main
 
 import (
-  "context"
+	"context"
+
 	"github.com/gofiber/fiber/v2"
 
-  "goweb/pages"
-  "goweb/handlers/user"
+	"goweb/db"
+	"goweb/handlers/user"
+	"goweb/pages"
 )
 
 func main() {
@@ -14,6 +16,16 @@ func main() {
 
   app := fiber.New()
   app.Static("/public", "./public/")
+
+  // shall be used once and commented afterwards,
+  // and maybe completed removed in production.
+  app.Get("/seed", func(c *fiber.Ctx) error {
+    err := db.Seed()
+    if err != nil {
+      c.Status(fiber.StatusInternalServerError).SendString("internal error.")
+    }
+    return c.SendString("Database has been seeded.")
+  })
 
   app.Get("/", func(c *fiber.Ctx) error {
     c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)

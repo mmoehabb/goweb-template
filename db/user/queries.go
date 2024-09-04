@@ -1,6 +1,9 @@
 package user
 
-import "goweb/db"
+import (
+	"errors"
+	"goweb/db"
+)
 
 type User struct{
   Username string
@@ -8,7 +11,12 @@ type User struct{
 }
 
 func Add(username, password string) error {
-  _, err := db.QueryResult("INSERT INTO users VALUES ($1, $2)", username, password)
+  res, err := db.SeqQuery("SELECT * FROM users WHERE username=$1", username)
+  if len(res) != 0 {
+    db.Disconnect()
+    return errors.New("username already found.")
+  }
+  _, err = db.Query("INSERT INTO users VALUES ($1, $2)", username, password)
   if err != nil {
     return err
   }
@@ -16,7 +24,7 @@ func Add(username, password string) error {
 }
 
 func Get(username string) (User, error) {
-  res, err := db.QueryResult("SELECT * FROM users WHERE username=$1", username)
+  res, err := db.Query("SELECT * FROM users WHERE username=$1", username)
   if err != nil {
     return User{}, err
   }
