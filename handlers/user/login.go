@@ -43,6 +43,6 @@ func Login(c *fiber.Ctx) error {
     return c.SendStatus(fiber.StatusUnauthorized)
   }
 
-  return c.SendString("You have successfully logged in 😄")
+  return c.SendString("<script>start()</script>")
 }
 

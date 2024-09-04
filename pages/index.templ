@@ -23,28 +23,28 @@ templ Index() {
       <script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
       <script src="public/game.js"></script>
     }
-    <body class="relative flex flex-col bg-background color-text min-h-screen overflow-hidden">
+    <body class="flex flex-col bg-background color-text min-h-screen h-auto overflow-auto">
       
       @layouts.Header()
 
-      <main class="flex-1 flex flex-wrap justify-center items-center p-8 lg:px-24 bg-background color-text">
-        <div id="gamediv" class="flex-1 text-2xl p-4 text-center">
-          <label>A game should appear here once you successfully login.</label>
+      <main class="relative flex-1 flex flex-wrap justify-center items-center p-8 lg:px-24 bg-background color-text">
+        <div id="gamediv" class="flex-1 flex flex-col items-center text-2xl p-4 text-center">
+          <label id="gamelabel">A game should appear here once you successfully login.</label>
+          <canvas id="gameframe" class="w-96 h-96 my-4 rounded"></canvas>
         </div>
         <div class="flex flex-col p-4 shadow-xl bg-background border-2 border-primary rounded-xl">
           <label class="text-xl color-text">Let's try creating a functional form 😃</label>
           @forms.Login(make(map[string]string))
           @forms.Register(make(map[string]string))
         </div>
+        <img 
+          src="public/PNGs/go.png" 
+          class="absolute z-20 h-52 bottom-[-200px]" 
+          style="animation: example 30s linear 5s infinite forwards"
+        />
       </main>
       
       @layouts.Footer()
-
-      <img 
-        src="public/PNGs/go.png" 
-        class="absolute h-52 bottom-[-200px]" 
-        style="animation: example 30s linear 5s infinite forwards"
-      />
 
     </body>
   </html>
