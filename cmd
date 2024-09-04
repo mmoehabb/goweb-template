@@ -20,7 +20,7 @@ if [ $1 == compile ]; then
 elif [ $1 == run ]; then
   go run .
 elif [ $1 == dev ]; then
-  templ generate --watch --cmd "go run ."
+  templ generate --watch --cmd "air"
 elif [ $1 == build ]; then
   go build
 else

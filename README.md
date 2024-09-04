@@ -32,8 +32,15 @@ If everything went right, you should be able to see the template live on [http:/
 
 You can also enable live reload with the command:
 
-```
+```shell
 $ templ generate --watch --cmd "go run ."
+```
+
+However this will watch only templ files, you may wanna reload the server also when go files are modified.
+For this sake `.air.toml` file (as you may have noticed) is in the root directory; make sure to install [air](https://github.com/air-verse/air) then execute the previous command with `air` instead of `go run .`.
+
+```shell
+$ templ generate --watch --cmd "air"
 ```
 
 ### ./cmd (Only Linux)
@@ -42,5 +49,5 @@ You may use the `./cmd` file placed in the root directory, as a shorthand for th
 
 ```shell
 $ chmod +x ./cmd
-$ ./cmd dev # executes: "templ generate --watch --cmd 'go run .'"
+$ ./cmd dev # executes: "templ generate --watch --cmd 'air'"
 ```
