@@ -17,7 +17,7 @@ A template for developing full-stack web applications in Golang.
 As you probably know `main.go` is the starting point of your go application. In this template, the server is started and its endpoints declared explicitly in `main.go`, however it shall have direct access only to [hanlders](#handlers) which it uses in defining the endpoints (attaching fiber handlers).
 
 #### cmd
-Just an extra tool used as a shorthand for commands, as shown [below](#./cmd (Only Linux)). You can safely delete it.
+Just an extra tool used as a shorthand for commands, as shown [below](#cmd-only-linux). You can safely delete it.
 
 #### handlers
 This package (directory) includes all fiber callback functions, used in `main.go`, aggregated or grouped into different packages (directories). And for each sub-package there should exist two files: `types.go` and `validators.go`; the first defines related types to the group (i.e. User, Credentials...etc), whereas the latter defines different validate functions to be used in handlers while getting users inputs (requests payloads).
@@ -118,20 +118,20 @@ conn, err = pgx.Connect(context.Background(), "postgres://postgres:postgres@loca
 ```
 
 If you haven't established a postgresql server before, you may find the following steps helpful:\
-[1]. Download & install postgres from here: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
-[2]. Modify `pg_hba.conf` to enable md5 remote access:
-    - specify user to "postgres": `$ su - postgres`
-    - run the following command in order to find the coniguration file location: 
+[1]. Download & install postgres from here: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)\
+[2]. Modify `pg_hba.conf` to enable md5 remote access:\
+    - specify user to "postgres": `$ su - postgres`\
+    - run the following command in order to find the coniguration file location:\
     ```shell
     $ psql -c "SHOW config_file"
     ```
-    - open the file `pg_hba.conf` located at the same directory of `postgresql.conf`, then add those lines to the end of it: 
+    - open the file `pg_hba.conf` located at the same directory of `postgresql.conf`, then add those lines to the end of it:\
 ```
 # This means that remote access is allowed using IP v4 and IP v6 to all databases and all users using the "md5" authentication protocol
 host    all             all              127.0.0.1/0                       md5
 host    all             all              ::/0                            md5
 ```
-[3]. Start the service: 
+[3]. Start the service:\
     ```shell
     $ service postgresql start
     ```
