@@ -117,24 +117,23 @@ In order to see all the template functionalities in action, you have to make sur
 conn, err = pgx.Connect(context.Background(), "postgres://postgres:postgres@localhost:5432/postgres")
 ```
 
-If you haven't established a postgresql server before, you may find the following steps helpful:\
-[1]. Download & install postgres from here: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)\
-[2]. Modify `pg_hba.conf` to enable md5 remote access:\
-    - specify user to "postgres": `$ su - postgres`\
-    - run the following command in order to find the coniguration file location:\
+If you haven't established a postgresql server before, you may find the following steps helpful:
+1. Download & install postgres from here: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
+2. Modify `pg_hba.conf` to enable md5 remote access:
+    - specify user to "postgres": `$ su - postgres`
+    - run the following command in order to find the coniguration file location: `$ psql -c "SHOW config_file"`
+    - open the file `pg_hba.conf` located at the same directory of `postgresql.conf`, then add the lines, shown below step 3, to the end of it:
+3. Start the service:
     ```shell
-    $ psql -c "SHOW config_file"
+    $ service postgresql start
     ```
-    - open the file `pg_hba.conf` located at the same directory of `postgresql.conf`, then add those lines to the end of it:\
+
 ```
+# Add these lines to the end of pg_hba.conf
 # This means that remote access is allowed using IP v4 and IP v6 to all databases and all users using the "md5" authentication protocol
 host    all             all              127.0.0.1/0                       md5
 host    all             all              ::/0                            md5
 ```
-[3]. Start the service:\
-    ```shell
-    $ service postgresql start
-    ```
 
 And finally run the application, register, login, and have fun:
 
