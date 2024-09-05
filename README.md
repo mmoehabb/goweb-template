@@ -1,5 +1,7 @@
 A template for developing full-stack web applications in Golang.
 
+![overview](./overview.gif)
+
 ## Used Technologies
 
 - [Golang](https://go.dev/)
@@ -11,7 +13,7 @@ A template for developing full-stack web applications in Golang.
 
 ## Template Structure
 
-### root function
+### root files
 
 #### main.go
 As you probably know `main.go` is the starting point of your go application. In this template, the server is started and its endpoints declared explicitly in `main.go`, however it shall have direct access only to [hanlders](#handlers) which it uses in defining the endpoints (attaching fiber handlers).
@@ -19,20 +21,20 @@ As you probably know `main.go` is the starting point of your go application. In 
 #### cmd
 Just an extra tool used as a shorthand for commands, as shown [below](#cmd-only-linux). You can safely delete it.
 
-#### handlers
+### handlers
 This package (directory) includes all fiber callback functions, used in `main.go`, aggregated or grouped into different packages (directories). And for each sub-package there should exist two files: `types.go` and `validators.go`; the first defines related types to the group (i.e. User, Credentials...etc), whereas the latter defines different validate functions to be used in handlers while getting users inputs (requests payloads).
 
-#### db
+### db
 This package exports functions related to the database, and more importantly it has sub-packages with a more specified functions for various (system) entities.
 
 The exported functions are: Query, SeqQuery, Queries, and Disconnect. `Query` function establishes a connection then executes the supplied sql query (a string parameter), then returns the result as a slice of type `[]any`, and finally closes the connection. `SeqQuery` is just like `Query` however it doesn't close the connection eventually; so make sure to call `Disconnect` after a series (sequence) of `SeqQuery` calls. And lastly, `Queries` just takes a slice of strings parameter rather than a single string, executes each sql query, closes the connection, and then returns nil or error in case an error occured.
 
 db package constitutes of several sub-packages each of which declares and defines various db functions, related to a specific entity, by using the above-mentioned four functions. For example, the `db/user` package exports `Add` and `Get` functions that can be used directly by [handlers](#handlers) to communicate with the database.
 
-#### public
+### public
 Public assests live in the `./public` directory, which is served by the file server of fiber by using the method: `app.Static(...)` in `main.go`. You should put here all the pictures, videos, sound, scripts...etc, that shall be publicly served to all users with no restrictions. 
 
-#### pages & ui
+### pages & ui
 These two packages contain only '.templ' files. As the name indicates, the first is for the application pages: templ components with '<head>' and '<body>' tag names. The latter, on the other hand, constitutes of several sub-packages for several ui categories, like: forms, components, layouts, mini-components...etc.
 
 ```
