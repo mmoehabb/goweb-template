@@ -2,8 +2,6 @@ package user
 
 import (
 	"context"
-  "fmt"
-  "os"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -27,12 +25,7 @@ func Login(c *fiber.Ctx) error {
 
   res, err := user.Get(creds.Username)
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Query Failed: %v", err)
-    return err
-  }
-
-  if res.Username == "" {
-    errs["username"] = "username not found."
+    errs["username"] = err.Error()
     forms.Login(errs).Render(context.Background(), c.Response().BodyWriter())
     return c.SendStatus(fiber.StatusNotFound)
   }

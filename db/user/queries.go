@@ -28,6 +28,9 @@ func Get(username string) (User, error) {
   if err != nil {
     return User{}, err
   }
+  if len(res) == 0 {
+    return User{}, errors.New("couldn't find username.")
+  }
   user := User{ 
     Username: res[0].(string), 
     Password: res[1].(string),
