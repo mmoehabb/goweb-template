@@ -25,7 +25,7 @@ func Register(c *fiber.Ctx) error {
 
 	err := user.Add(creds.Username, creds.Password)
 	if err != nil {
-		errs["username"] = "already found, try another one."
+		errs["username"] = err.Error()
 		forms.Register(errs).Render(context.Background(), c.Response().BodyWriter())
 		return c.SendStatus(fiber.StatusFound)
 	}
