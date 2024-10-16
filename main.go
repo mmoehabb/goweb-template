@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// initialize a context to share data between different templ components
-	ctx := context.WithValue(context.Background(), "version", "v0.0.2")
+	ctx := context.WithValue(context.Background(), "version", "v0.0.3")
 
 	app := fiber.New()
 	app.Static("/public", "./public/")

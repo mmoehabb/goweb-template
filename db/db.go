@@ -15,7 +15,7 @@ func connect() (*pgx.Conn, error) {
   // urlExample := "postgres://username:password@localhost:5432/database_name"
   var err error
   if (conn == nil) {
-    conn, err = pgx.Connect(context.Background(), "postgres://postgres:postgres@localhost:5432/followershub")
+    conn, err = pgx.Connect(context.Background(), "postgres://postgres:postgres@localhost:5432/postgres")
   }
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -86,13 +86,14 @@ func SeqQuery(query string, args ...any) ([]any, error) {
     return nil, err
   }
   var res = []any{}
-  if rows.Next() {
+  for rows.Next() {
     r, err := rows.Values()
     if err != nil {
       return res, err
     }
     res = append(res, r)
   }
+  rows.Close()
   return res, err
 }
 
