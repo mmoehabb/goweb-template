@@ -13,12 +13,18 @@ type User struct {
 }
 
 func Add(username, password string) error {
-	res, err := db.SeqQuery("SELECT * FROM users WHERE username=$1", username)
+  conn, err := db.GetConnection();
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return errors.New("Internal Server Error.")
+	}
+
+	res, err := conn.SeqQuery("SELECT * FROM users WHERE username=$1", username)
 	if len(res) != 0 {
-		db.Disconnect()
+		conn.Close()
 		return errors.New("username already found.")
 	}
-	_, err = db.Query("INSERT INTO users VALUES ($1, $2)", username, password)
+	_, err = conn.Query("INSERT INTO users VALUES ($1, $2)", username, password)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return errors.New("Internal Server Error.")
@@ -27,7 +33,13 @@ func Add(username, password string) error {
 }
 
 func Get(username string) (User, error) {
-	res, err := db.Query("SELECT * FROM users WHERE username=$1", username)
+  conn, err := db.GetConnection();
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return User{}, errors.New("Internal Server Error.")
+	}
+
+	res, err := conn.Query("SELECT * FROM users WHERE username=$1", username)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return User{}, errors.New("Internal Server Error.")

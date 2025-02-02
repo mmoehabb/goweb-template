@@ -5,34 +5,20 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// this global var allows us to implement SeqQuery function
-var conn *pgx.Conn
+var pool *pgxpool.Pool
 
-func connect() (*pgx.Conn, error) {
-	// urlExample := "postgres://username:password@localhost:5432/database_name"
-	var err error
-	if conn == nil {
-		conn, err = pgx.Connect(context.Background(), "postgres://postgres:postgres@localhost:5432/postgres")
-	}
+func connect() (*pgxpool.Conn, error) {
+  var err error
+  if pool == nil {
+    pool, err = pgxpool.New(context.Background(), "postgres://postgres:postgres@localhost:5432/postgres")
+  }
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		return conn, err
+    return nil, fmt.Errorf("Unable to connect to database: %v\n", err)
 	}
-	return conn, nil
-}
-
-func Disconnect() error {
-	if conn == nil {
-		return nil
-	}
-	err := conn.Close(context.Background())
-	if err == nil {
-		conn = nil
-	}
-	return err
+	return pool.Acquire(context.Background())
 }
 
 // execute each query in queries slice without returning any results
@@ -47,7 +33,7 @@ func Queries(queries []string) error {
 			fmt.Fprintf(os.Stderr, "internal error: %v", p)
 		}
 	}()
-	defer Disconnect()
+	defer conn.Release()
 	for _, query := range queries {
 		rows, err := conn.Query(context.Background(), query)
 		if err != nil {
@@ -63,20 +49,34 @@ func Queries(queries []string) error {
 	return nil
 }
 
-// execute single query and return the result
-func Query(query string, args ...any) ([]any, error) {
-	defer Disconnect()
-	return SeqQuery(query, args...)
+type Connection struct {
+  conn *pgxpool.Conn
 }
 
-// just like Query by does not close the connection
+func GetConnection() (*Connection, error) {
+  conn, err := connect();
+  if err != nil {
+    return nil, fmt.Errorf("Unable to get Connection: %v\n", err)
+  }
+  return &Connection{conn: conn}, err
+}
+
+// Release the connection; the user will not be able to query with this struct any more.
+func (c *Connection) Close() {
+	c.conn.Release()
+}
+
+// execute single query and return the result
+func (c *Connection) Query(query string, args ...any) ([]any, error) {
+	defer c.conn.Release()
+	return c.SeqQuery(query, args...)
+}
+
+// just like Query but does not close the connection
 // make sure to call Query in the last of the "sequence"
 // or manually call Disconnect
-func SeqQuery(query string, args ...any) ([]any, error) {
-	conn, err := connect()
-	if err != nil {
-		return nil, err
-	}
+func (c *Connection) SeqQuery(query string, args ...any) ([]any, error) {
+  var conn = c.conn
 	defer func() {
 		if p := recover(); p != nil {
 			fmt.Fprintf(os.Stderr, "internal error: %v", p)
