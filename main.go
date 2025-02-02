@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
+	anc "goweb/ancillaries"
 	"goweb/db"
 	"goweb/handlers/user"
 	"goweb/pages"
@@ -12,7 +13,7 @@ import (
 
 func main() {
 	// initialize a context to share data between different templ components
-	ctx := context.WithValue(context.Background(), "version", "v0.0.3")
+	ctx := context.WithValue(context.Background(), "version", "v0.0.4")
 
 	app := fiber.New()
 	app.Static("/public", "./public/")
@@ -20,10 +21,8 @@ func main() {
 	// shall be used once and commented afterwards,
 	// and maybe completed removed in production.
 	app.Get("/seed", func(c *fiber.Ctx) error {
-		err := db.Seed()
-		if err != nil {
-			c.Status(fiber.StatusInternalServerError).SendString("internal error.")
-		}
+    defer anc.Recover(c)
+		anc.Must(nil, db.Seed())
 		return c.SendString("Database has been seeded.")
 	})
 

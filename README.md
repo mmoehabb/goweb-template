@@ -37,6 +37,9 @@ Public assests live in the `./public` directory, which is served by the file ser
 ### pages & ui
 These two packages contain only '.templ' files. As the name indicates, the first is for the application pages: templ components with '<head>' and '<body>' tag names. The latter, on the other hand, constitutes of several sub-packages for several ui categories, like: forms, components, layouts, mini-components...etc.
 
+### ancillaries
+This package shall contain all logic that's shared between other packages and sub-packages.
+
 ```
 .
 ├── cmd
