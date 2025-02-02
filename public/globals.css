@@ -41,32 +41,58 @@ html[theme="dark"] {
   --color-error: #b33939;
 }
 
-.bg-primary { background-color: var(--color-primary) }
-.bg-secondary { background-color: var(--color-secondary) }
-.bg-accent { background-color: var(--color-accent) }
-.bg-background { background-color: var(--color-background) }
-.bg-text { background-color: var(--color-text) }
-.bg-success { background-color: var(--color-success) }
-.bg-error { background-color: var(--color-error) }
-
-.color-primary { color: var(--color-primary) }
-.color-secondary { color: var(--color-secondary) }
-.color-accent { color: var(--color-accent) }
-.color-background { color: var(--color-background) }
-.color-text { color: var(--color-text) }
-.color-success { color: var(--color-success) }
-.color-error { color: var(--color-error) }
-
-.border-primary { color: var(--color-primary) }
-.border-secondary { color: var(--color-secondary) }
-.border-accent { color: var(--color-accent) }
-.border-background { color: var(--color-background) }
-.border-text { color: var(--color-text) }
-.border-success { color: var(--color-success) }
-.border-error { color: var(--color-error) }
-
 .light-view { display: var(--light-display); }
 .dark-view { display: var(--dark-display); }
+
+/** bg, text and border colors **/
+.bg-primary { background-color: var(--color-primary); fill: var(--color-primary) }
+.bg-secondary { background-color: var(--color-secondary); fill: var(--color-secondary) }
+.bg-accent { background-color: var(--color-accent); fill: var(--color-accent) }
+.bg-background { background-color: var(--color-background); fill: var(--color-background) }
+.bg-text { background-color: var(--color-text); fill: var(--color-text) }
+.bg-success { background-color: var(--color-success); fill: var(--color-success) }
+.bg-error { background-color: var(--color-error); fill: var(--color-error) }
+
+.color-primary { color: var(--color-primary); stroke: var(--color-primary) }
+.color-secondary { color: var(--color-secondary); stroke: var(--color-secondary) }
+.color-accent { color: var(--color-accent); stroke: var(--color-accent) }
+.color-background { color: var(--color-background); stroke: var(--color-background) }
+.color-text { color: var(--color-text); stroke: var(--color-text) }
+.color-success { color: var(--color-success); stroke: var(--color-success) }
+.color-error { color: var(--color-error); stroke: var(--color-error) }
+
+.border-primary { border-color: var(--color-primary) }
+.border-secondary { border-color: var(--color-secondary) }
+.border-accent { border-color: var(--color-accent) }
+.border-background { border-color: var(--color-background) }
+.border-text { border-color: var(--color-text) }
+.border-success { border-color: var(--color-success) }
+.border-error { border-color: var(--color-error) }
+
+/** hovers **/
+.hover-bg-primary:hover { background-color: var(--color-primary); fill: var(--color-primary) }
+.hover-bg-secondary:hover { background-color: var(--color-secondary); fill: var(--color-secondary) }
+.hover-bg-accent:hover { background-color: var(--color-accent); fill: var(--color-accent) }
+.hover-bg-background:hover { background-color: var(--color-background); fill: var(--color-background) }
+.hover-bg-text:hover { background-color: var(--color-text); fill: var(--color-text) }
+.hover-bg-success:hover { background-color: var(--color-success); fill: var(--color-success) }
+.hover-bg-error:hover { background-color: var(--color-error); fill: var(--color-error) }
+
+.hover-color-primary:hover { color: var(--color-primary); stroke: var(--color-primary) }
+.hover-color-secondary:hover { color: var(--color-secondary); stroke: var(--color-secondary) }
+.hover-color-accent:hover { color: var(--color-accent); stroke: var(--color-accent) }
+.hover-color-background:hover { color: var(--color-background); stroke: var(--color-background) }
+.hover-color-text:hover { color: var(--color-text); stroke: var(--color-text) }
+.hover-color-success:hover { color: var(--color-success); stroke: var(--color-success) }
+.hover-color-error:hover { color: var(--color-error); stroke: var(--color-error) }
+
+.hover-border-primary:hover { border-color: var(--color-primary) }
+.hover-border-secondary:hover { border-color: var(--color-secondary) }
+.hover-border-accent:hover { border-color: var(--color-accent) }
+.hover-border-background:hover { border-color: var(--color-background) }
+.hover-border-text:hover { border-color: var(--color-text) }
+.hover-border-success:hover { border-color: var(--color-success) }
+.hover-border-error:hover { border-color: var(--color-error) }
 
 /** typography **/
 body {
