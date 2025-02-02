@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"goweb/db/user"
+	"goweb/db/users"
 	"goweb/ui/forms"
 )
 
@@ -23,7 +23,7 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	res, err := user.Get(creds.Username)
+	res, err := users.Get(creds.Username)
 	if err != nil {
 		errs["username"] = err.Error()
 		forms.Login(errs).Render(context.Background(), c.Response().BodyWriter())

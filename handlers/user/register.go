@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"goweb/db/user"
+	"goweb/db/users"
 	"goweb/ui/forms"
 )
 
@@ -23,7 +23,7 @@ func Register(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	err := user.Add(creds.Username, creds.Password)
+	err := users.Add(creds.Username, creds.Password)
 	if err != nil {
 		errs["username"] = err.Error()
 		forms.Register(errs).Render(context.Background(), c.Response().BodyWriter())
