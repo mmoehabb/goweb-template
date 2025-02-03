@@ -20,7 +20,7 @@ if [ $1 == compile ]; then
 elif [ $1 == run ]; then
   go run .
 elif [ $1 == dev ]; then
-  templ generate --watch --cmd "air"
+  templ generate --watch --proxy="http://localhost:3000" --cmd "air"
 elif [ $1 == build ]; then
   go build
 else
