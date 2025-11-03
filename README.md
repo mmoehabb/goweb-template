@@ -18,8 +18,8 @@ A template for developing full-stack web applications in Golang.
 #### main.go
 As you probably know `main.go` is the starting point of your go application. In this template, it merely initializes a fiber app, adds some middlewares, and defines a couple of endpoints.
 
-#### cmd
-Just an extra tool used as a shorthand for commands, as shown [below](#cmd-only-linux). You can just delete it, if you don't like it!
+#### goweb
+Just an extra tool used as a shorthand for commands, as shown [below](#goweb-linux-only). You can just delete it, if you don't like it!
 
 ### handlers
 This package (directory) includes all fiber callback functions, used in `main.go`, aggregated or grouped into different packages (directories). And for each sub-package there should exist two files: `types.go` and `validators.go`; the first defines related types to the group (i.e. User, Credentials...etc), whereas the latter defines different validate functions to be used in handlers while getting users inputs (requests payloads).
@@ -50,7 +50,7 @@ All constant values shall be defined in this package. For example, your `.env` f
 
 ```
 .
-├── cmd
+├── goweb
 ├── go.mod
 ├── go.sum
 ├── LICENSE
@@ -107,7 +107,7 @@ Install the dependencies with; execute the following command on the root directo
 $ go install
 ```
 
-> You may use `./cmd install` if you want to install both the packages and the tools (templ and air binaries) all at once.
+> You may use `./goweb install` if you want to install both the packages and the tools (templ and air binaries) all at once.
 
 Then, write the following command to compile templ files and run the server afterwards:
 
@@ -165,11 +165,11 @@ And finally run the application, register, login, and have fun:
 $ go run .
 ```
 
-### ./cmd (Linux Only)
+### ./goweb (Linux Only)
 
-You may use the `./cmd` file placed in the root directory, as a shorthand for the above-mentioned commands:
+You may use the `./goweb` file placed in the root directory, as a shorthand for the above-mentioned commands:
 
 ```shell
-$ chmod +x ./cmd
-$ ./cmd dev # executes: "templ generate --watch --cmd 'air'"
+$ chmod +x ./goweb
+$ ./goweb dev # executes: "templ generate --watch --cmd 'air'"
 ```

@@ -3,7 +3,7 @@
 commands=(install compile run dev build)
 
 invalidUsage () {
-    echo "Valid Usage: ./cmd <command>"
+    echo "Valid Usage: ./goweb <command>"
     echo "commands:"
     for command in ${commands[@]}; do
       printf "\t$command\n"
