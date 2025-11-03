@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 
 	anc "goweb/ancillaries"
+	"goweb/constants"
 	"goweb/db"
 	"goweb/handlers/user"
 	"goweb/pages"
@@ -13,7 +15,7 @@ import (
 
 func main() {
 	// initialize a context to share data between different templ components
-	ctx := context.WithValue(context.Background(), "version", "v0.0.4")
+	ctx := context.WithValue(context.Background(), "version", "v0.0.5")
 
 	app := fiber.New()
 	app.Static("/public", "./public/")
@@ -21,7 +23,7 @@ func main() {
 	// shall be used once and commented afterwards,
 	// and maybe completed removed in production.
 	app.Get("/seed", func(c *fiber.Ctx) error {
-    defer anc.Recover(c)
+		defer anc.Recover(c)
 		anc.Must(nil, db.Seed())
 		return c.SendString("Database has been seeded.")
 	})
@@ -35,5 +37,5 @@ func main() {
 	app.Post("/login", user.Login)
 	app.Post("/register", user.Register)
 
-	app.Listen(":3000")
+	app.Listen(":" + strconv.Itoa(constants.AppConfig.Port))
 }

@@ -6,17 +6,18 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"goweb/constants"
 )
 
 var pool *pgxpool.Pool
 
 func connect() (*pgxpool.Conn, error) {
-  var err error
-  if pool == nil {
-    pool, err = pgxpool.New(context.Background(), "postgres://postgres:postgres@localhost:5432/postgres")
-  }
+	var err error
+	if pool == nil {
+		pool, err = pgxpool.New(context.Background(), constants.AppConfig.DatabaseUrl)
+	}
 	if err != nil {
-    return nil, fmt.Errorf("Unable to connect to database: %v\n", err)
+		return nil, fmt.Errorf("Unable to connect to database: %v\n", err)
 	}
 	return pool.Acquire(context.Background())
 }
@@ -50,15 +51,15 @@ func Queries(queries []string) error {
 }
 
 type Connection struct {
-  conn *pgxpool.Conn
+	conn *pgxpool.Conn
 }
 
 func GetConnection() (*Connection, error) {
-  conn, err := connect();
-  if err != nil {
-    return nil, fmt.Errorf("Unable to get Connection: %v\n", err)
-  }
-  return &Connection{conn: conn}, err
+	conn, err := connect()
+	if err != nil {
+		return nil, fmt.Errorf("Unable to get Connection: %v\n", err)
+	}
+	return &Connection{conn: conn}, err
 }
 
 // Release the connection; the user will not be able to query with this struct any more.
@@ -76,7 +77,7 @@ func (c *Connection) Query(query string, args ...any) ([]any, error) {
 // make sure to call Query in the last of the "sequence"
 // or manually call Disconnect
 func (c *Connection) SeqQuery(query string, args ...any) ([]any, error) {
-  var conn = c.conn
+	var conn = c.conn
 	defer func() {
 		if p := recover(); p != nil {
 			fmt.Fprintf(os.Stderr, "internal error: %v", p)

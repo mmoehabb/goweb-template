@@ -16,10 +16,10 @@ A template for developing full-stack web applications in Golang.
 ### root files
 
 #### main.go
-As you probably know `main.go` is the starting point of your go application. In this template, the server is started and its endpoints declared explicitly in `main.go`, however it shall have direct access only to [hanlders](#handlers) which it uses in defining the endpoints (attaching fiber handlers).
+As you probably know `main.go` is the starting point of your go application. In this template, it merely initializes a fiber app, adds some middlewares, and defines a couple of endpoints.
 
 #### cmd
-Just an extra tool used as a shorthand for commands, as shown [below](#cmd-only-linux). You can safely delete it.
+Just an extra tool used as a shorthand for commands, as shown [below](#cmd-only-linux). You can just delete it, if you don't like it!
 
 ### handlers
 This package (directory) includes all fiber callback functions, used in `main.go`, aggregated or grouped into different packages (directories). And for each sub-package there should exist two files: `types.go` and `validators.go`; the first defines related types to the group (i.e. User, Credentials...etc), whereas the latter defines different validate functions to be used in handlers while getting users inputs (requests payloads).
@@ -42,6 +42,12 @@ These two packages contain only '.templ' files. As the name indicates, the first
 ### ancillaries
 This package shall contain all logic that's shared between other packages and sub-packages.
 
+### constants
+
+All constant values shall be defined in this package. For example, your `.env` file values are represented in this package as a global go struct that can be imported from anywhere else.
+
+### Directory Tree
+
 ```
 .
 ├── cmd
@@ -50,6 +56,10 @@ This package shall contain all logic that's shared between other packages and su
 ├── LICENSE
 ├── main.go
 ├── README.md
+├── ancillaries
+│   └── errors.go
+├── constants
+│   └── config.go
 ├── db
 │   ├── db.go
 │   └── user
@@ -96,6 +106,8 @@ Install the dependencies with; execute the following command on the root directo
 ```shell
 $ go install
 ```
+
+> You may use `./cmd install` if you want to install both the packages and the tools (templ and air binaries) all at once.
 
 Then, write the following command to compile templ files and run the server afterwards:
 
@@ -153,7 +165,7 @@ And finally run the application, register, login, and have fun:
 $ go run .
 ```
 
-### ./cmd (Only Linux)
+### ./cmd (Linux Only)
 
 You may use the `./cmd` file placed in the root directory, as a shorthand for the above-mentioned commands:
 
