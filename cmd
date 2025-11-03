@@ -1,6 +1,6 @@
 #!/bin/bash
 
-commands=(compile run dev build)
+commands=(install compile run dev build)
 
 invalidUsage () {
     echo "Valid Usage: ./cmd <command>"
@@ -15,7 +15,11 @@ if [ -z $1 ]; then
   invalidUsage
 fi
 
-if [ $1 == compile ]; then
+if [ $1 == install ]; then
+  go install
+  go install github.com/a-h/templ/cmd/templ@latest
+  go install github.com/air-verse/air@latest
+elif [ $1 == compile ]; then
   templ generate
 elif [ $1 == run ]; then
   go run .
