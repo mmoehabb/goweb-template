@@ -26,5 +26,6 @@ go.work.sum
 
 # templ / air
 tmp
+build
 *_templ.go
 *_templ.txt

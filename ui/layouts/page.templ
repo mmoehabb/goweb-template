@@ -3,27 +3,23 @@ package layouts
 var headHandle = templ.NewOnceHandle()
 
 templ Page() {
-  <html theme="light">
-    @headHandle.Once() {
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-      <title>GoWeb Template</title>
-      <meta name="description" content="A template for developing web apps with golang.">
-      <meta name="keywords" content="go, web, templ, htmx, tailwind, fiber">
-      <meta name="author" content="M. E. Abdelsalam">
-
-      <link href="public/globals.css" rel="stylesheet" />
-
-      <script src="public/tailwind.js"></script>
-      <script src="public/util.js"></script>
-      <script src="public/game.js"></script>
-
-      <script src="https://unpkg.com/htmx.org@2.0.2"></script>
-      <script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
-    }
-    <body class="flex flex-col bg-background color-text min-h-screen h-auto overflow-auto">
-      { children... }
-    </body>
-  </html>
+	<html theme="light">
+		@headHandle.Once() {
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>GoWeb Template</title>
+			<meta name="description" content="A template for developing web apps with golang."/>
+			<meta name="keywords" content="go, web, templ, htmx, tailwind, fiber"/>
+			<meta name="author" content="M. E. Abdelsalam"/>
+			<link href="public/globals.css" rel="stylesheet"/>
+			<script src="public/tailwind.js"></script>
+			<script src="public/util.js"></script>
+			<script src="public/game.js"></script>
+			<script src="https://unpkg.com/htmx.org@2.0.2"></script>
+			<script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
+		}
+		<body class="flex flex-col bg-background color-text min-h-screen h-auto overflow-auto">
+			{ children... }
+		</body>
+	</html>
 }
