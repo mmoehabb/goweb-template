@@ -8,7 +8,7 @@ import (
 )
 
 func Add(username, password string) error {
-  conn := anc.Must(db.GetConnection()).(*db.Connection)
+	conn := anc.Must(db.GetConnection()).(*db.Connection)
 
 	res := anc.Must(conn.SeqQuery("SELECT * FROM users WHERE username=$1", username)).([]any)
 	if len(res) != 0 {
@@ -21,7 +21,7 @@ func Add(username, password string) error {
 }
 
 func Get(username string) (DataModel, error) {
-  conn := anc.Must(db.GetConnection()).(*db.Connection)
+	conn := anc.Must(db.GetConnection()).(*db.Connection)
 
 	res := anc.Must(conn.Query("SELECT * FROM users WHERE username=$1", username)).([]any)
 	if len(res) == 0 {

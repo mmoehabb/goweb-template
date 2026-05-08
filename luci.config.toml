@@ -1,0 +1,32 @@
+title = "goweb-template"
+description = "A shorthand commands for the goweb-template"
+
+[bash]
+install = """
+go install
+go install github.com/a-h/templ/cmd/templ@latest
+go install github.com/air-verse/air@latest
+"""
+run = "go run ."
+dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+build = "go build -o ./build/app"
+
+[zshell]
+install = """
+go install
+go install github.com/a-h/templ/cmd/templ@latest
+go install github.com/air-verse/air@latest
+"""
+run = "go run ."
+dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+build = "go build -o ./build/app"
+
+[bat]
+install = """
+go install
+go install github.com/a-h/templ/cmd/templ@latest
+go install github.com/air-verse/air@latest
+"""
+run = "go run ."
+dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+build = "go build -o ./build/app"

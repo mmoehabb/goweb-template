@@ -12,11 +12,11 @@ func GetEndpoint(dir string) []string {
 
 	entries, err := os.ReadDir(dir)
 	if err != nil {
-		log.Println("WARNING:", dir,"directory not found!")
+		log.Println("WARNING:", dir, "directory not found!")
 	}
 
 	for _, entry := range entries {
-		if (strings.HasSuffix(entry.Name(), "_templ.go")) {
+		if strings.HasSuffix(entry.Name(), "_templ.go") {
 			var endpoint = strings.TrimSuffix(entry.Name(), "_templ.go")
 			if strings.Compare(endpoint, "index") == 0 {
 				endpoints = append(endpoints, "/")
@@ -24,7 +24,7 @@ func GetEndpoint(dir string) []string {
 			endpoints = append(endpoints, endpoint)
 			continue
 		}
-		if (entry.IsDir()) {
+		if entry.IsDir() {
 			eps := GetEndpoint(path.Join(dir, entry.Name()))
 			var inner []string
 			for _, ep := range eps {
