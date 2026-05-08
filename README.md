@@ -6,6 +6,7 @@ A template for developing full-stack web applications in Golang.
 
 - [Golang](https://go.dev/)
 - [Templ](https://templ.guide/)
+- [TemplUI](https://templui.io/)
 - [Tailwind](https://tailwindcss.com/)
 - [HTMX](https://htmx.org/)
 - [Fiber](https://docs.gofiber.io/)
@@ -53,40 +54,46 @@ All constant values shall be defined in this package. For example, your `.env` f
 ├── luci.config.toml
 ├── go.mod
 ├── go.sum
+├── .templui.json
 ├── LICENSE
 ├── main.go
 ├── README.md
 ├── ancillaries
-│   └── errors.go
+│   └── errors.go
+├── components
+│   └── button
+│       └── button.templ
 ├── constants
-│   └── config.go
+│   └── config.go
 ├── db
-│   ├── db.go
-│   └── user
-│       └── queries.go
+│   ├── db.go
+│   └── user
+│       └── queries.go
 ├── handlers
-│   └── user
-│       ├── login.go
-│       ├── register.go
-│       ├── types.go
-│       └── validators.go
+│   └── user
+│       ├── login.go
+│       ├── register.go
+│       ├── types.go
+│       └── validators.go
 ├── pages
-│   └── index.templ
+│   └── index.templ
 ├── public
-│   ├── globals.css
-│   ├── tailwind.js
-│   ├── util.js
-│   └── ...
-└── ui
-    ├── components
-    │   ├── Button.templ
-    │   └── TextInput.templ
-    ├── forms
-    │   ├── login.templ
-    │   └── register.templ
-    └── layouts
-        ├── footer.templ
-        └── header.templ
+│   ├── globals.css
+│   ├── tailwind.js
+│   ├── util.js
+│   └── ...
+├── ui
+│   ├── components
+│   │   ├── Button.templ
+│   │   └── TextInput.templ
+│   ├── forms
+│   │   ├── login.templ
+│   │   └── register.templ
+│   └── layouts
+│       ├── footer.templ
+│       └── header.templ
+└── utils
+    └── templui.go
 ```
 
 ## Usage

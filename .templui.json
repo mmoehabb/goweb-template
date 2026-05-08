@@ -1,0 +1,7 @@
+{
+  "componentsDir": "ui/components",
+  "utilsDir": "ui/utils",
+  "moduleName": "goweb",
+  "jsDir": "assets/js",
+  "jsPublicPath": "/assets/js"
+}
