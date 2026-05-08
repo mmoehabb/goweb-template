@@ -6,6 +6,7 @@ install = """
 go install
 go install github.com/a-h/templ/cmd/templ@latest
 go install github.com/air-verse/air@latest
+go install github.com/templui/templui/cmd/templui@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
@@ -16,6 +17,7 @@ install = """
 go install
 go install github.com/a-h/templ/cmd/templ@latest
 go install github.com/air-verse/air@latest
+go install github.com/templui/templui/cmd/templui@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
@@ -26,6 +28,7 @@ install = """
 go install
 go install github.com/a-h/templ/cmd/templ@latest
 go install github.com/air-verse/air@latest
+go install github.com/templui/templui/cmd/templui@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"

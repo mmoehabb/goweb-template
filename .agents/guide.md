@@ -89,9 +89,41 @@ app.Post("/<feature>", <feature>.<Feature>)
 
 ## Creating UI Components
 
-### 1. Create Form Template
+### Using templui (Recommended)
 
-Create `ui/forms/<form>_templ.go` (write raw HTML/Templ):
+templui provides beautifully designed, accessible components via CLI workflow (like shadcn/ui).
+
+**Setup**:
+```bash
+go install github.com/templui/templui/cmd/templui@latest
+templui init
+```
+
+**Adding components**:
+```bash
+templui add button card dialog
+```
+
+**Usage**:
+```templ
+import "goweb/ui/components/button"
+
+@button.Button(button.Props{Variant: button.VariantDefault, Type: button.TypeSubmit}) {
+    Submit
+}
+```
+
+**Available components**: Run `templui list` to see all available components.
+
+**Updating**:
+```bash
+templui --installed add    # Update all installed components
+templui upgrade            # Update CLI and utils
+```
+
+### Custom Components
+
+Create custom components in `ui/components/` when templui doesn't have what you need.
 
 ```go
 package forms
@@ -107,6 +139,22 @@ func Login(errs map[string]string) templ.Component {
 }
 ```
 
+### Custom Form Template
+
+Create `ui/forms/<form>.templ` (write raw HTML/Templ):
+
+```go
+package forms
+
+import "github.com/a-h/templ"
+
+templ Login(errs map[string]string) {
+    <form hx-post="/login">
+        // ... form HTML
+    </form>
+}
+```
+
 Then run `templ generate` to generate the .go file.
 
 ### 2. Create Page Template
@@ -118,11 +166,10 @@ Page files in `pages/` are auto-discovered by `ancillaries/endpoints.go` and map
 - `pages/about_templ.go` → `/about`
 - `pages/user/profile_templ.go` → `/user/profile`
 
-### 3. Reusable Components
+### Reusable Components
 
 Create in `ui/components/`:
-- `Button_templ.go` → `Button(label, variant, attrs)`
-- `TextInput_templ.go` → `TextInput(name, type, value, error, attrs)`
+- `TextInput.templ` → Custom input component (no templui equivalent yet)
 
 ## Database Layer
 
@@ -203,8 +250,10 @@ In `db/db.go`, add to `Seed()`:
 | Types file | `handlers/user/types.go` |
 | Types struct | `type Credentials struct` |
 | Validators | `handlers/user/validators.go` |
-| Form template | `ui/forms/login_templ.go` |
-| Page template | `pages/index_templ.go` |
+| Form template | `ui/forms/login.templ` |
+| Page template | `pages/index.templ` |
+| templui component | `ui/components/button/button.templ` |
+| Custom UI component | `ui/components/TextInput.templ` |
 | DB model | `db/users/model.go` |
 | DB queries | `db/users/queries.go` |
 
