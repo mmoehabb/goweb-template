@@ -232,12 +232,43 @@ func Get(field1 string) (DataModel, error) {
 }
 ```
 
-### 3. Add Seed (if new table)
+## Database Migrations
 
-In `db/db.go`, add to `Seed()`:
+Migrations are managed via [goose](https://github.com/pressly/goose). Create SQL migration files in `db/migrations/`:
 
-```go
-"CREATE TABLE IF NOT EXISTS table (field1 VARCHAR(45) PRIMARY KEY, field2 VARCHAR(45) NOT NULL);",
+### Creating a Migration
+
+Create `db/migrations/XXX_create_<table>.sql`:
+
+```sql
+-- +goose Up
+-- +goose StatementBegin
+CREATE TABLE IF NOT EXISTS profiles (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(45) REFERENCES users(username),
+    bio TEXT
+);
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE IF EXISTS profiles;
+-- +goose StatementEnd
+```
+
+### Running Migrations
+
+- **Auto:** Migrations run automatically on `go run .` (via `db.RunMigrations()`)
+- **CLI:** `goose postgres "postgres://user:pass@localhost:5432/db?sslmode=disable" up -dir ./db/migrations`
+- **Rollback:** `goose postgres "url" down -dir ./db/migrations`
+- **Status:** `goose postgres "url" status -dir ./db/migrations`
+
+### Creating New Migrations via CLI
+
+```bash
+go install github.com/pressly/goose/v3/cmd/goose@latest
+goose create add_new_table sql
+# Creates: db/migrations/YYYYMMDDHHMMSS_add_new_table.sql
 ```
 
 ## Conventions
@@ -256,6 +287,7 @@ In `db/db.go`, add to `Seed()`:
 | Custom UI component | `ui/components/TextInput.templ` |
 | DB model | `db/users/model.go` |
 | DB queries | `db/users/queries.go` |
+| Migration file | `db/migrations/001_create_users.sql` |
 
 ### Validation Pattern
 

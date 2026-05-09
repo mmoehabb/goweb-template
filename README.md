@@ -11,6 +11,7 @@ A template for developing full-stack web applications in Golang.
 - [HTMX](https://htmx.org/)
 - [Fiber](https://docs.gofiber.io/)
 - [Postgres](https://github.com/jackc/pgx)
+- [Goose](https://github.com/pressly/goose) (Database Migrations)
 
 ## Template Structure
 
@@ -67,6 +68,8 @@ All constant values shall be defined in this package. For example, your `.env` f
 │   └── config.go
 ├── db
 │   ├── db.go
+│   ├── migrations/
+│   │   └── 001_create_users.sql
 │   └── user
 │       └── queries.go
 ├── handlers
@@ -170,6 +173,61 @@ And finally run the application, register, login, and have fun:
 
 ```shell
 $ go run .
+```
+
+### Database Migrations
+
+This template uses [Goose](https://github.com/pressly/goose) for database migrations. Migrations run automatically when the application starts.
+
+#### Migration Files
+Migration files are stored in `db/migrations/` with SQL files named with a timestamp prefix:
+```
+db/migrations/
+└── 001_create_users.sql
+```
+
+#### CLI Commands
+You can also run migrations manually using the goose CLI:
+```shell
+# Install goose
+go install github.com/pressly/goose/v3/cmd/goose@latest
+
+# Run migrations (specify migrations directory with -dir)
+goose postgres "postgres://user:pass@localhost:5432/db?sslmode=disable" up -dir ./db/migrations
+
+# Rollback last migration
+goose postgres "postgres://user:pass@localhost:5432/db?sslmode=disable" down -dir ./db/migrations
+
+# Check status
+goose postgres "postgres://user:pass@localhost:5432/db?sslmode=disable" status -dir ./db/migrations
+
+# Create new migration
+goose create add_new_table sql -dir ./db/migrations
+```
+
+Or use luci shorthand commands (configured in `luci.config.toml`):
+```shell
+luci bash.migrate status   # Check migration status
+luci bash.migrate up       # Run pending migrations
+luci bash.migrate down     # Rollback last migration
+```
+
+#### Creating New Migrations
+```sql
+-- db/migrations/002_add_users_email.sql
+-- +goose Up
+-- +goose StatementBegin
+CREATE TABLE IF NOT EXISTS users (
+    username VARCHAR(45) PRIMARY KEY,
+    password VARCHAR(45) NOT NULL,
+    email VARCHAR(255) UNIQUE
+);
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+ALTER TABLE users DROP COLUMN email;
+-- +goose StatementEnd
 ```
 
 ### Luci CLI

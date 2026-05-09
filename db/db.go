@@ -1,75 +1,62 @@
 package db
 
 import (
-	"context"
+	"database/sql"
 	"fmt"
 	"os"
+	"path/filepath"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/pressly/goose/v3"
 	"goweb/constants"
 )
 
-var pool *pgxpool.Pool
+var pool interface{} // kept for future use
 
-func connect() (*pgxpool.Conn, error) {
-	var err error
-	if pool == nil {
-		pool, err = pgxpool.New(context.Background(), constants.AppConfig.DatabaseUrl)
-	}
+func connect() (*sql.DB, error) {
+	db, err := sql.Open("pgx", constants.AppConfig.DatabaseUrl)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to connect to database: %v\n", err)
 	}
-	return pool.Acquire(context.Background())
+	return db, nil
 }
 
 // execute each query in queries slice without returning any results
 // if it didn't return error, then all queries passed successfully.
 func Queries(queries []string) error {
-	conn, err := connect()
+	db, err := connect()
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if p := recover(); p != nil {
-			fmt.Fprintf(os.Stderr, "internal error: %v", p)
-		}
-	}()
-	defer conn.Release()
+	defer db.Close()
 	for _, query := range queries {
-		rows, err := conn.Query(context.Background(), query)
-		if err != nil {
+		if _, err := db.Exec(query); err != nil {
 			return fmt.Errorf("%q\nexecuting query: %s", err, query)
-		}
-		for rows.Next() {
-		}
-		err = rows.Err()
-		if err != nil {
-			return err
 		}
 	}
 	return nil
 }
 
 type Connection struct {
-	conn *pgxpool.Conn
+	db *sql.DB
 }
 
 func GetConnection() (*Connection, error) {
-	conn, err := connect()
+	db, err := connect()
 	if err != nil {
 		return nil, fmt.Errorf("Unable to get Connection: %v\n", err)
 	}
-	return &Connection{conn: conn}, err
+	return &Connection{db: db}, err
 }
 
 // Release the connection; the user will not be able to query with this struct any more.
 func (c *Connection) Close() {
-	c.conn.Release()
+	c.db.Close()
 }
 
 // execute single query and return the result
 func (c *Connection) Query(query string, args ...any) ([]any, error) {
-	defer c.conn.Release()
+	defer c.db.Close()
 	return c.SeqQuery(query, args...)
 }
 
@@ -77,32 +64,61 @@ func (c *Connection) Query(query string, args ...any) ([]any, error) {
 // make sure to call Query in the last of the "sequence"
 // or manually call Disconnect
 func (c *Connection) SeqQuery(query string, args ...any) ([]any, error) {
-	var conn = c.conn
-	defer func() {
-		if p := recover(); p != nil {
-			fmt.Fprintf(os.Stderr, "internal error: %v", p)
-		}
-	}()
-	rows, err := conn.Query(context.Background(), query, args...)
+	rows, err := c.db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
-	var res = []any{}
+	defer rows.Close()
+
+	cols, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+
+	var res []any
 	for rows.Next() {
-		r, err := rows.Values()
-		if err != nil {
+		values := make([]any, len(cols))
+		for i := range values {
+			var v any
+			values[i] = &v
+		}
+		if err := rows.Scan(values...); err != nil {
 			return res, err
 		}
-		res = append(res, r)
+		rowData := make([]any, len(values))
+		for i, v := range values {
+			if b, ok := v.(*any); ok && b != nil {
+				rowData[i] = *b
+			} else {
+				rowData[i] = v
+			}
+		}
+		res = append(res, rowData)
 	}
-	rows.Close()
-	return res, err
+	return res, rows.Err()
 }
 
 // hardcoded sql queries to seed (initialize) the database placed here
 func Seed() error {
-	err := Queries([]string{
-		"CREATE TABLE IF NOT EXISTS users (username VARCHAR(45) PRIMARY KEY, password VARCHAR(45) NOT NULL);",
-	})
-	return err
+	return nil
+}
+
+func RunMigrations() error {
+	wd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to get working dir: %w", err)
+	}
+
+	db, err := sql.Open("pgx", constants.AppConfig.DatabaseUrl)
+	if err != nil {
+		return fmt.Errorf("failed to open db connection: %w", err)
+	}
+	defer db.Close()
+
+	migrationsDir := filepath.Join(wd, "db", "migrations")
+	goose.SetTableName("goose_db_version")
+	if err := goose.Run("up", db, migrationsDir); err != nil {
+		return fmt.Errorf("failed to run migrations: %w", err)
+	}
+	return nil
 }
