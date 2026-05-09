@@ -21,7 +21,7 @@ Use this file to track tasks across sessions. Update it at the start of each ses
 - [ ] Add profile POST route in `main.go`
 - [ ] Create profile DB model: `db/users/profile.go`
 - [ ] Add profile query functions: `db/users/queries.go`
-- [ ] Add seed for profile table: `db/db.go`
+- [ ] Create migration for profile table: `db/migrations/XXX_create_profiles.sql`
 
 ### Adding a New Feature (Generic)
 
@@ -35,7 +35,7 @@ Use this file to track tasks across sessions. Update it at the start of each ses
 - [ ] Create DB package: `db/<feature>/`
 - [ ] Create DB model: `db/<feature>/model.go`
 - [ ] Create DB queries: `db/<feature>/queries.go`
-- [ ] Add seed to `db/db.go` (if new table)
+- [ ] Create migration file: `db/migrations/XXX_create_<table>.sql`
 - [ ] Run `templ generate`
 - [ ] Test the feature
 - [ ] Run lint/typecheck

@@ -7,10 +7,16 @@ go install
 go install github.com/a-h/templ/cmd/templ@latest
 go install github.com/air-verse/air@latest
 go install github.com/templui/templui/cmd/templui@latest
+go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
 build = "go build -o ./build/app"
+
+[bash.migrate]
+up = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' up -dir ./db/migrations"
+down = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' down -dir ./db/migrations"
+status = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' status -dir ./db/migrations"
 
 [zshell]
 install = """
@@ -18,10 +24,16 @@ go install
 go install github.com/a-h/templ/cmd/templ@latest
 go install github.com/air-verse/air@latest
 go install github.com/templui/templui/cmd/templui@latest
+go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
 build = "go build -o ./build/app"
+
+[zshell.migrate]
+up = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' up -dir ./db/migrations"
+down = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' down -dir ./db/migrations"
+status = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' status -dir ./db/migrations"
 
 [bat]
 install = """
@@ -29,7 +41,13 @@ go install
 go install github.com/a-h/templ/cmd/templ@latest
 go install github.com/air-verse/air@latest
 go install github.com/templui/templui/cmd/templui@latest
+go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
 build = "go build -o ./build/app"
+
+[bat.migrate]
+up = "goose postgres \"postgres://postgres:postgres@localhost:5432/postgres\" up -dir ./db/migrations"
+down = "goose postgres \"postgres://postgres:postgres@localhost:5432/postgres\" down -dir ./db/migrations"
+status = "goose postgres \"postgres://postgres:postgres@localhost:5432/postgres\" status -dir ./db/migrations"

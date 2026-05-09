@@ -17,7 +17,11 @@ import (
 
 func main() {
 	// initialize a context to share data between different templ components
-	ctx := context.WithValue(context.Background(), "version", "v0.0.6")
+	ctx := context.WithValue(context.Background(), "version", "v0.1.0")
+
+	if err := db.RunMigrations(); err != nil {
+		log.Fatalf("Failed to run migrations: %v", err)
+	}
 
 	app := fiber.New()
 	app.Static("/public", "./public/")
