@@ -14,9 +14,10 @@ dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
 build = "go build -o ./build/app"
 
 [bash.migrate]
-up = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' up -dir ./db/migrations"
-down = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' down -dir ./db/migrations"
-status = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' status -dir ./db/migrations"
+up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
+down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
+reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
+status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"
 
 [zshell]
 install = """
@@ -31,9 +32,10 @@ dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
 build = "go build -o ./build/app"
 
 [zshell.migrate]
-up = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' up -dir ./db/migrations"
-down = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' down -dir ./db/migrations"
-status = "goose postgres 'postgres://postgres:postgres@localhost:5432/postgres' status -dir ./db/migrations"
+up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
+down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
+reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
+status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"
 
 [bat]
 install = """
@@ -48,6 +50,7 @@ dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
 build = "go build -o ./build/app"
 
 [bat.migrate]
-up = "goose postgres \"postgres://postgres:postgres@localhost:5432/postgres\" up -dir ./db/migrations"
-down = "goose postgres \"postgres://postgres:postgres@localhost:5432/postgres\" down -dir ./db/migrations"
-status = "goose postgres \"postgres://postgres:postgres@localhost:5432/postgres\" status -dir ./db/migrations"
+up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
+down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
+reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
+status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"

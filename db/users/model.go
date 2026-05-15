@@ -1,24 +1,16 @@
 package users
 
+import "gorm.io/gorm"
+
 type DataModel struct {
-	Username string
-	Password string
+	gorm.Model
+	Username string `gorm:"uniqueIndex;not null"`
+	Password string `gorm:"not null"`
+	Nickname string
 }
 
-func parseRow(row []any) DataModel {
-	return DataModel{
-		Username: row[0].(string),
-		Password: row[1].(string),
-	}
-}
-
-func parseModel(m *DataModel) map[string]string {
-	var modelMap = make(map[string]string)
-	if m.Username != "" {
-		modelMap["Username"] = m.Username
-	}
-	if m.Password != "" {
-		modelMap["Username"] = m.Password
-	}
-	return modelMap
+// TableName overrides the default table name (data_model; which is generated
+// from the type name) to "users"
+func (DataModel) TableName() string {
+	return "users"
 }

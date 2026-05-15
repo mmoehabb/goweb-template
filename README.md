@@ -11,7 +11,8 @@ A template for developing full-stack web applications in Golang.
 - [HTMX](https://htmx.org/)
 - [Fiber](https://docs.gofiber.io/)
 - [Postgres](https://github.com/jackc/pgx)
-- [Goose](https://github.com/pressly/goose) (Database Migrations)
+- [GORM](https://gorm.io/) (Database ORM)
+- [Goose](https://github.com/pressly/goose) (SQL Migrations)
 
 ## Template Structure
 
@@ -27,13 +28,14 @@ Just an extra tool used as a shorthand for commands, as shown [below](#luci-cli)
 This package (directory) includes all fiber callback functions, used in `main.go`, aggregated or grouped into different packages (directories). And for each sub-package there should exist two files: `types.go` and `validators.go`; the first defines related types to the group (i.e. User, Credentials...etc), whereas the latter defines different validate functions to be used in handlers while getting users inputs (requests payloads).
 
 ### db
-This package exports functions related to the database, and more importantly it has sub-packages with a more specified functions for various (system) entities.
+This package exports functions related to the database using [GORM](https://gorm.io/). It provides a global `Connection` variable for database operations and sub-packages with entity-specific functions.
 
-It exports two functions and a struct. The function `Queries` acquires a connection then executes the supplied sql query (a string parameter), then returns the result as a slice of type `[]any`, and finally releases the connection. The `GetConnection` function, on the other hand, initializes and returns a `Connection` struct that can be used by users to order to send sequential queries with the same db client connection.
+The main exports are:
+- `Init()` - initializes the GORM database connection
+- `RunMigrations(models...)` - auto-migrates model schemas
+- `Connection` - global `*gorm.DB` instance for direct queries
 
-> before v0.0.4: "The exported functions are: Query, SeqQuery, Queries, and Disconnect. `Query` function establishes a connection then executes the supplied sql query (a string parameter), then returns the result as a slice of type `[]any`, and finally closes the connection. `SeqQuery` is just like `Query` however it doesn't close the connection eventually; so make sure to call `Disconnect` after a series (sequence) of `SeqQuery` calls. And lastly, `Queries` just takes a slice of strings parameter rather than a single string, executes each sql query, closes the connection, and then returns nil or error in case an error occured".
-
-db package constitutes of several sub-packages each of which declares and defines various db functions, related to a specific entity, by using the above-mentioned functions/utilities. For example, the `db/user` package exports `Add` and `Get` functions that can be used directly by [handlers](#handlers) to communicate with the database.
+For example, the `db/users` package exports `Add` and `Get` functions that can be used directly by [handlers](#handlers) to communicate with the database.
 
 ### public
 Public assests live in the `./public` directory, which is served by the file server of fiber by using the method: `app.Static(...)` in `main.go`. You should put here all the pictures, videos, sound, scripts...etc, that shall be publicly served to all users with no restrictions. 
@@ -68,9 +70,10 @@ All constant values shall be defined in this package. For example, your `.env` f
 │   └── config.go
 ├── db
 │   ├── db.go
-│   ├── migrations/
+│   ├── goose_migrations/
 │   │   └── 001_create_users.sql
-│   └── user
+│   └── users/
+│       ├── model.go
 │       └── queries.go
 ├── handlers
 │   └── user
@@ -154,8 +157,8 @@ conn, err = pgx.Connect(context.Background(), "postgres://postgres:postgres@loca
 If you haven't established a postgresql server before, you may find the following steps helpful:
 1. Download & install postgres from here: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
 2. Modify `pg_hba.conf` to enable md5 remote access:
-    - specify user to "postgres": `$ su - postgres`
-    - run the following command in order to find the coniguration file location: `$ psql -c "SHOW config_file"`
+    - log into the terminal with "postgres" user: `$ su - postgres`
+    - run the following command in order to find the configuration file location: `$ psql -c "SHOW config_file"`
     - open the file `pg_hba.conf` located at the same directory of `postgresql.conf`, then add the lines, shown below step 3, to the end of it:
 3. Start the service:
     ```shell
@@ -177,57 +180,69 @@ $ go run .
 
 ### Database Migrations
 
-This template uses [Goose](https://github.com/pressly/goose) for database migrations. Migrations run automatically when the application starts.
+This template supports **two migration strategies** that run automatically on startup:
 
-#### Migration Files
-Migration files are stored in `db/migrations/` with SQL files named with a timestamp prefix:
-```
-db/migrations/
-└── 001_create_users.sql
-```
+#### 1. GORM AutoMigrate (Recommended for prototyping)
+For quick schema changes during development. Define models with GORM tags:
 
-#### CLI Commands
-You can also run migrations manually using the goose CLI:
-```shell
-# Install goose
-go install github.com/pressly/goose/v3/cmd/goose@latest
+```go
+package users
 
-# Run migrations (specify migrations directory with -dir)
-goose postgres "postgres://user:pass@localhost:5432/db?sslmode=disable" up -dir ./db/migrations
+import "gorm.io/gorm"
 
-# Rollback last migration
-goose postgres "postgres://user:pass@localhost:5432/db?sslmode=disable" down -dir ./db/migrations
+type DataModel struct {
+    gorm.Model
+    Username string `gorm:"uniqueIndex;not null"`
+    Password string `gorm:"not null"`
+}
 
-# Check status
-goose postgres "postgres://user:pass@localhost:5432/db?sslmode=disable" status -dir ./db/migrations
-
-# Create new migration
-goose create add_new_table sql -dir ./db/migrations
+// TableName overrides the default table name (data_model; which is generated
+// from the type name) to "users"
+func (DataModel) TableName() string {
+	return "users"
+}
 ```
 
-Or use luci shorthand commands (configured in `luci.config.toml`):
-```shell
-luci bash.migrate status   # Check migration status
-luci bash.migrate up       # Run pending migrations
-luci bash.migrate down     # Rollback last migration
+Add models to `db.RunMigrations()` in `main.go`:
+
+```go
+if err := db.RunMigrations(users.DataModel{}); err != nil {
+    log.Fatalf("Failed to run GORM migrations: %v", err)
+}
 ```
 
-#### Creating New Migrations
+#### 2. Goose SQL Migrations (Recommended for production)
+For version-controlled SQL migrations with rollback support. SQL files go in `db/goose_migrations/`:
+
 ```sql
--- db/migrations/002_add_users_email.sql
+-- db/goose_migrations/001_create_users.sql
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS users (
-    username VARCHAR(45) PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(45) UNIQUE NOT NULL,
     password VARCHAR(45) NOT NULL,
-    email VARCHAR(255) UNIQUE
+    created_at TIMESTAMP
 );
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-ALTER TABLE users DROP COLUMN email;
+DROP TABLE IF EXISTS users;
 -- +goose StatementEnd
+```
+
+Goose migrations also run automatically on startup via `db.RunGooseMigrations()`.
+
+#### When to use which?
+- **GORM AutoMigrate**: Fast prototyping, simple models, don't need rollbacks
+- **Goose**: Production apps, complex SQL, need version control, require rollbacks
+
+**Note:** Goose CLI commands use the `DATABASE_URL` from your `.env` file. Make sure to source it before running migrate commands:
+
+```shell
+$ source .env
+$ DATABASE_URL=$DATABASE_URL luci migrate up
 ```
 
 ### Luci CLI
