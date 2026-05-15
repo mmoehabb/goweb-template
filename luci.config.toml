@@ -19,6 +19,10 @@ down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
 reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
 status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"
 
+[bash.test]
+all = "go test ./tests/..."
+coverage = "go test ./tests/... -cover"
+
 [zshell]
 install = """
 go install
@@ -37,6 +41,10 @@ down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
 reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
 status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"
 
+[zshell.test]
+all = "go test ./tests/..."
+coverage = "go test ./tests/... -cover"
+
 [bat]
 install = """
 go install
@@ -54,3 +62,7 @@ up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
 down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
 reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
 status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"
+
+[bat.test]
+all = "go test ./tests/..."
+coverage = "go test ./tests/... -cover"

@@ -20,8 +20,9 @@ func GetEndpoint(dir string) []string {
 			var endpoint = strings.TrimSuffix(entry.Name(), "_templ.go")
 			if strings.Compare(endpoint, "index") == 0 {
 				endpoints = append(endpoints, "/")
+			} else {
+				endpoints = append(endpoints, endpoint)
 			}
-			endpoints = append(endpoints, endpoint)
 			continue
 		}
 		if entry.IsDir() {

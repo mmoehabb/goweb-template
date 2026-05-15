@@ -1,7 +1,6 @@
 package constants
 
 import (
-	"log"
 	"os"
 	"strconv"
 
@@ -16,17 +15,14 @@ type Config struct {
 var AppConfig = getConfig()
 
 func getConfig() Config {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
-	}
+	_ = godotenv.Load()
 
 	dbURL := os.Getenv("DATABASE_URL")
 	port := os.Getenv("PORT")
 
-	portNumber, err := strconv.Atoi(port)
-	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
+	portNumber, _ := strconv.Atoi(port)
+	if portNumber == 0 {
+		portNumber = 3000
 	}
 
 	return Config{
