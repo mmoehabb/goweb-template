@@ -10,7 +10,7 @@ go install github.com/templui/templui/cmd/templui@latest
 go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
-dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'; pkill goweb"
 generate = "templ generate"
 build = "go build -o ./build/app"
 clean = "find ui pages -name '*_templ.go' -delete"
@@ -34,7 +34,7 @@ go install github.com/templui/templui/cmd/templui@latest
 go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
-dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'; pkill goweb"
 generate = "templ generate"
 build = "go build -o ./build/app"
 clean = "find ui pages -name '*_templ.go' -delete"
@@ -58,7 +58,7 @@ go install github.com/templui/templui/cmd/templui@latest
 go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
-dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'; taskkill /F /IM 'goweb*'"
 generate = "templ generate"
 build = "go build -o ./build/app"
 clean = "find ui pages -name '*_templ.go' -delete"
