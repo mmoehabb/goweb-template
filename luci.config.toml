@@ -11,7 +11,9 @@ go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+generate = "templ generate"
 build = "go build -o ./build/app"
+clean = "find ui pages -name '*_templ.go' -delete"
 
 [bash.migrate]
 up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
@@ -33,7 +35,9 @@ go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+generate = "templ generate"
 build = "go build -o ./build/app"
+clean = "find ui pages -name '*_templ.go' -delete"
 
 [zshell.migrate]
 up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
@@ -55,7 +59,9 @@ go install github.com/pressly/goose/v3/cmd/goose@latest
 """
 run = "go run ."
 dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'"
+generate = "templ generate"
 build = "go build -o ./build/app"
+clean = "find ui pages -name '*_templ.go' -delete"
 
 [bat.migrate]
 up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
