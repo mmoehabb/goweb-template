@@ -19,9 +19,9 @@ Use this file to track tasks across sessions. Update it at the start of each ses
 - [ ] Create profile page template: `pages/user/profile_templ.go`
 - [ ] Add profile GET route in `main.go`
 - [ ] Add profile POST route in `main.go`
-- [ ] Create profile DB model: `db/users/profile.go`
+- [ ] Create profile DB model: `db/users/model.go` (add new struct with GORM tags)
 - [ ] Add profile query functions: `db/users/queries.go`
-- [ ] Create migration for profile table: `db/migrations/XXX_create_profiles.sql`
+- [ ] Add model to `db.RunMigrations()` in `main.go`
 
 ### Adding a New Feature (Generic)
 
@@ -33,9 +33,9 @@ Use this file to track tasks across sessions. Update it at the start of each ses
 - [ ] Create page template: `pages/<page>_templ.go`
 - [ ] Add route in `main.go`
 - [ ] Create DB package: `db/<feature>/`
-- [ ] Create DB model: `db/<feature>/model.go`
+- [ ] Create DB model: `db/<feature>/model.go` (with GORM tags)
 - [ ] Create DB queries: `db/<feature>/queries.go`
-- [ ] Create migration file: `db/migrations/XXX_create_<table>.sql`
+- [ ] Add model to `db.RunMigrations()` in `main.go`
 - [ ] Run `templ generate`
 - [ ] Test the feature
 - [ ] Run lint/typecheck

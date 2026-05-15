@@ -11,16 +11,24 @@ import (
 	anc "goweb/ancillaries"
 	"goweb/constants"
 	"goweb/db"
+	"goweb/db/users"
 	"goweb/handlers/user"
 	"goweb/pages"
 )
 
 func main() {
-	// initialize a context to share data between different templ components
 	ctx := context.WithValue(context.Background(), "version", "v0.1.0")
 
-	if err := db.RunMigrations(); err != nil {
-		log.Fatalf("Failed to run migrations: %v", err)
+	if _, err := db.Init(); err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+
+	if err := db.RunMigrations(users.DataModel{}); err != nil {
+		log.Fatalf("Failed to run GORM migrations: %v", err)
+	}
+
+	if err := db.RunGooseMigrations(); err != nil {
+		log.Fatalf("Failed to run goose migrations: %v", err)
 	}
 
 	app := fiber.New()

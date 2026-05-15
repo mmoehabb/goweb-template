@@ -180,16 +180,12 @@ Create in `ui/components/`:
 ```go
 package <feature>
 
-type DataModel struct {
-    Field1 string
-    Field2 string
-}
+import "gorm.io/gorm"
 
-func parseRow(row []any) DataModel {
-    return DataModel{
-        Field1: row[0].(string),
-        Field2: row[1].(string),
-    }
+type DataModel struct {
+    gorm.Model
+    Field1 string `gorm:"uniqueIndex;not null"`
+    Field2 string `gorm:"not null"`
 }
 ```
 
@@ -203,73 +199,97 @@ package <feature>
 import (
     "errors"
 
-    anc "goweb/ancillaries"
     "goweb/db"
 )
 
 func Add(field1, field2 string) error {
-    conn := anc.Must(db.GetConnection()).(*db.Connection)
-
-    res := anc.Must(conn.SeqQuery("SELECT * FROM table WHERE field1=$1", field1)).([]any)
-    if len(res) != 0 {
-        conn.Close()
+    var existing DataModel
+    result := db.Connection.Where("field1 = ?", field1).First(&existing)
+    if result.RowsAffected > 0 {
         return errors.New("already exists")
     }
 
-    anc.Must(conn.Query("INSERT INTO table VALUES ($1, $2)", field1, field2))
-    return nil
+    newModel := DataModel{Field1: field1, Field2: field2}
+    result = db.Connection.Create(&newModel)
+    return result.Error
 }
 
 func Get(field1 string) (DataModel, error) {
-    conn := anc.Must(db.GetConnection()).(*db.Connection)
-
-    res := anc.Must(conn.Query("SELECT * FROM table WHERE field1=$1", field1)).([]any)
-    if len(res) == 0 {
+    var model DataModel
+    result := db.Connection.Where("field1 = ?", field1).First(&model)
+    if result.Error != nil {
         return DataModel{}, errors.New("not found")
     }
+    return model, nil
+}
+```
 
-    return parseRow(res[0].([]any)), nil
+### 3. Register in main.go
+
+Add model to `RunMigrations()`:
+
+```go
+import "goweb/db/<feature>"
+
+if err := db.RunMigrations(<feature>.DataModel{}); err != nil {
+    log.Fatalf("Failed to run migrations: %v", err)
 }
 ```
 
 ## Database Migrations
 
-Migrations are managed via [goose](https://github.com/pressly/goose). Create SQL migration files in `db/migrations/`:
+This template supports two migration strategies:
 
-### Creating a Migration
+### 1. GORM AutoMigrate (Recommended for prototyping)
 
-Create `db/migrations/XXX_create_<table>.sql`:
+Models are defined with GORM tags and automatically synced to the database on startup.
+
+**Running:** Migrations run automatically on `go run .` via `db.RunMigrations()` in `main.go`.
+
+**Adding New Models:**
+1. Define model in `db/<feature>/model.go` with GORM tags
+2. Import the model in `main.go`
+3. Add to `db.RunMigrations()` call
+
+### 2. Goose SQL Migrations (Recommended for production)
+
+For version-controlled SQL migrations with rollback support. SQL files go in `db/goose_migrations/`:
 
 ```sql
+-- db/goose_migrations/001_create_<table>.sql
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE IF NOT EXISTS profiles (
+CREATE TABLE IF NOT EXISTS <table> (
     id SERIAL PRIMARY KEY,
-    user_id VARCHAR(45) REFERENCES users(username),
-    bio TEXT
+    field1 VARCHAR(45) NOT NULL
 );
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS <table>;
 -- +goose StatementEnd
 ```
 
-### Running Migrations
+**Running:** Also automatic on startup via `db.RunGooseMigrations()` in `main.go`.
 
-- **Auto:** Migrations run automatically on `go run .` (via `db.RunMigrations()`)
-- **CLI:** `goose postgres "postgres://user:pass@localhost:5432/db?sslmode=disable" up -dir ./db/migrations`
-- **Rollback:** `goose postgres "url" down -dir ./db/migrations`
-- **Status:** `goose postgres "url" status -dir ./db/migrations`
-
-### Creating New Migrations via CLI
-
+**CLI Commands:**
 ```bash
-go install github.com/pressly/goose/v3/cmd/goose@latest
-goose create add_new_table sql
-# Creates: db/migrations/YYYYMMDDHHMMSS_add_new_table.sql
+goose postgres "postgres://user:pass@localhost:5432/db" up -dir ./db/goose_migrations
+goose postgres "postgres://user:pass@localhost:5432/db" down -dir ./db/goose_migrations
 ```
+
+Or use luci: `luci bash.migrate up`
+
+### When to use which?
+
+| Use Case | Recommended |
+|----------|-------------|
+| Fast prototyping | GORM AutoMigrate |
+| Simple models | GORM AutoMigrate |
+| Production apps | Goose |
+| Complex SQL | Goose |
+| Need rollbacks | Goose |
 
 ## Conventions
 
@@ -322,11 +342,24 @@ if err != nil {
 
 ### Database Connection Pattern
 
-```go
-conn := anc.Must(db.GetConnection()).(*db.Connection)
-defer conn.Close()
+Use the global `db.Connection` for direct GORM operations:
 
-res := anc.Must(conn.Query(...)).([]any)
+```go
+result := db.Connection.Where("field = ?", value).First(&model)
+if result.Error != nil {
+    return result.Error
+}
 ```
 
-Where `anc.Must()` panics on error (defined in `ancillaries/`).
+Or use the wrapper for specific operations:
+
+```go
+conn, err := db.GetConnection()
+if err != nil {
+    return err
+}
+defer conn.Close()
+
+result := conn.Create(&model)
+return result.Error
+```
