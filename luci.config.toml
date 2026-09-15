@@ -1,7 +1,7 @@
 title = "goweb-template"
-description = "A shorthand commands for the goweb-template"
+description = "A shorthand commands for goweb-template"
 
-[bash]
+["*"]
 install = """
 go install
 go install github.com/a-h/templ/cmd/templ@latest
@@ -15,60 +15,12 @@ generate = "templ generate"
 build = "go build -o ./build/app"
 clean = "find ui pages -name '*_templ.go' -delete"
 
-[bash.migrate]
+["*".migrate]
 up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
 down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
 reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
 status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"
 
-[bash.test]
-all = "go test ./tests/..."
-coverage = "go test ./tests/... -cover"
-
-[zshell]
-install = """
-go install
-go install github.com/a-h/templ/cmd/templ@latest
-go install github.com/air-verse/air@latest
-go install github.com/templui/templui/cmd/templui@latest
-go install github.com/pressly/goose/v3/cmd/goose@latest
-"""
-run = "go run ."
-dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'; pkill goweb"
-generate = "templ generate"
-build = "go build -o ./build/app"
-clean = "find ui pages -name '*_templ.go' -delete"
-
-[zshell.migrate]
-up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
-down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
-reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
-status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"
-
-[zshell.test]
-all = "go test ./tests/..."
-coverage = "go test ./tests/... -cover"
-
-[bat]
-install = """
-go install
-go install github.com/a-h/templ/cmd/templ@latest
-go install github.com/air-verse/air@latest
-go install github.com/templui/templui/cmd/templui@latest
-go install github.com/pressly/goose/v3/cmd/goose@latest
-"""
-run = "go run ."
-dev = "templ generate --watch --proxy='http://localhost:3000' --cmd 'air'; taskkill /F /IM 'goweb*'"
-generate = "templ generate"
-build = "go build -o ./build/app"
-clean = "find ui pages -name '*_templ.go' -delete"
-
-[bat.migrate]
-up = "goose postgres \"$DATABASE_URL\" up -dir ./db/goose_migrations"
-down = "goose postgres \"$DATABASE_URL\" down -dir ./db/goose_migrations"
-reset = "goose postgres \"$DATABASE_URL\" reset -dir ./db/goose_migrations"
-status = "goose postgres \"$DATABASE_URL\" status -dir ./db/goose_migrations"
-
-[bat.test]
+["*".test]
 all = "go test ./tests/..."
 coverage = "go test ./tests/... -cover"
