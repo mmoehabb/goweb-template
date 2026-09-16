@@ -21,17 +21,15 @@ func GetEndpoint(dir string) []string {
 			if strings.Compare(endpoint, "index") == 0 {
 				endpoints = append(endpoints, "/")
 			} else {
-				endpoints = append(endpoints, endpoint)
+				endpoints = append(endpoints, "/"+endpoint)
 			}
 			continue
 		}
 		if entry.IsDir() {
 			eps := GetEndpoint(path.Join(dir, entry.Name()))
-			var inner []string
 			for _, ep := range eps {
-				inner = append(inner, path.Join(entry.Name(), ep))
+				endpoints = append(endpoints, path.Join("/", entry.Name(), ep))
 			}
-			endpoints = append(endpoints, inner...)
 		}
 	}
 
