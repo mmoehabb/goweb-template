@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/tools/go/packages"
 
 	anc "goweb/ancillaries"
 	"goweb/constants"
@@ -33,26 +32,14 @@ func main() {
 	var endpoints = anc.GetEndpoint("./pages/")
 
 	for _, endpoint := range endpoints {
-		pkgs, err := packages.Load(&packages.Config{}, "./pages/"+endpoint)
-		if err != nil {
-			log.Println(err)
-			continue
+		if page, ok := pages.Registry[endpoint]; ok {
+			app.Get(endpoint, func(c *fiber.Ctx) error {
+				c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
+				page().Render(ctx, c.Response().BodyWriter())
+				return c.SendStatus(200)
+			})
 		}
-		packages.Visit(pkgs, nil, func(p *packages.Package) {
-		})
-
-		app.Get(endpoint, func(c *fiber.Ctx) error {
-			c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
-			pages.Index().Render(ctx, c.Response().BodyWriter())
-			return c.SendStatus(200)
-		})
 	}
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
-		pages.Index().Render(ctx, c.Response().BodyWriter())
-		return c.SendStatus(200)
-	})
 
 	app.Post("/login", user.Login)
 	app.Post("/register", user.Register)
