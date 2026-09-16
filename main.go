@@ -27,20 +27,8 @@ func main() {
 		log.Fatalf("Failed to run GORM migrations: %v", err)
 	}
 
-	if err := db.RunGooseMigrations(); err != nil {
-		log.Fatalf("Failed to run goose migrations: %v", err)
-	}
-
 	app := fiber.New()
 	app.Static("/public", "./public/")
-
-	// shall be used once and commented afterwards,
-	// and maybe completed removed in production.
-	app.Get("/seed", func(c *fiber.Ctx) error {
-		defer anc.Recover(c)
-		anc.Must(nil, db.Seed())
-		return c.SendString("Database has been seeded.")
-	})
 
 	var endpoints = anc.GetEndpoint("./pages/")
 
